@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>我现在在逃避什么？</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar" aria-labelledby="pageTitle">
+      <div class="title-block">
+        <p class="eyebrow">拖延觉察工作台</p>
+        <h1 id="pageTitle">我现在在逃避什么？</h1>
+      </div>
+
+      <section class="summary-panel" aria-label="当前填空" aria-live="polite">
+        <p class="summary-label">当下填空</p>
+        <p class="summary-line">
+          我现在可能在逃避：<span class="slot" id="selectedOption">先选一个最像的答案</span>；我接下来只做：<span class="slot" id="selectedAction">一个小动作</span>。
+        </p>
+      </section>
+    </header>
+
+    <section class="workspace" aria-label="拖延觉察选择器">
+      <aside class="category-pane">
+        <label class="searchbox" for="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m21 21-4.2-4.2m1.2-5.3a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input id="search" type="search" placeholder="搜索：害怕、无聊、标准、手机、求助" autocomplete="off" />
+        </label>
+
+        <div class="category-meta" id="categoryMeta">共 0 类</div>
+        <nav class="category-list" id="categoryList" aria-label="逃避原因分类"></nav>
+      </aside>
+
+      <section class="detail-pane">
+        <div class="empty-state" id="emptyState" hidden>
+          没有找到匹配的选项。可以换一个更宽泛的词，比如“怕”“累”“不确定”。
+        </div>
+
+        <article class="detail-card" id="detailCard">
+          <header class="detail-header">
+            <span class="detail-icon" id="detailIcon" aria-hidden="true"></span>
+            <div class="detail-title">
+              <p class="detail-kicker">当前分类</p>
+              <h2 id="detailTitle"></h2>
+              <p id="detailDescription"></p>
+            </div>
+          </header>
+
+          <section class="detail-section" aria-label="常见表现">
+            <div class="section-heading">
+              <p class="section-label">常见表现</p>
+            </div>
+            <div class="tag-row" id="typicalList"></div>
+          </section>
+
+          <section class="detail-section option-section" aria-label="完整选项">
+            <div class="section-heading">
+              <p class="section-label">完整选项</p>
+              <span id="optionMeta"></span>
+            </div>
+            <ul class="option-list" id="optionList"></ul>
+          </section>
+
+          <section class="detail-section" aria-label="下一步小动作">
+            <div class="section-heading">
+              <p class="section-label">下一步小动作</p>
+            </div>
+            <div class="action-list" id="actionList"></div>
+          </section>
+
+          <footer class="copy-row">
+            <button class="primary-btn" id="copyLine" type="button">复制填空句</button>
+            <p class="copy-hint" id="copyHint" role="status" aria-live="polite"></p>
+          </footer>
+        </article>
+      </section>
+    </section>
+
+    <section class="print-list" id="printList" aria-label="打印清单"></section>
+  </main>
+
+  <script src="assets/avoidance-categories.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
