@@ -313,3 +313,46 @@ window.AVOIDANCE_CATEGORIES = [
     actions: ["写下惦记的事", "放到旁边清单", "回到一个小任务"]
   }
 ];
+
+window.AVOIDANCE_GROUPS = [
+  {
+    id: "clarity",
+    title: "任务不清",
+    icon: "🧭",
+    tone: "#397f78",
+    description: "入口、条件或取舍还没有清楚。",
+    categoryIds: ["task-unclear", "missing-resources", "decision-load"]
+  },
+  {
+    id: "load",
+    title: "压力太重",
+    icon: "⏱️",
+    tone: "#8f7440",
+    description: "工作量、截止日期或身体能量让你想退开。",
+    categoryIds: ["task-too-large", "deadline-pressure", "low-energy"]
+  },
+  {
+    id: "outcome",
+    title: "害怕结果",
+    icon: "🎯",
+    tone: "#7563a0",
+    description: "担心失败、评价、粗糙版本或自我落差。",
+    categoryIds: ["fear-of-failure", "fear-of-judgment", "perfectionism", "self-image-pressure"]
+  },
+  {
+    id: "mood",
+    title: "情绪动机",
+    icon: "🪫",
+    tone: "#3f8298",
+    description: "情绪不舒服、即时奖励或意义感不足。",
+    categoryIds: ["uncomfortable-emotion", "instant-reward", "low-meaning"]
+  },
+  {
+    id: "external",
+    title: "外部牵扯",
+    icon: "🔗",
+    tone: "#7d7f3d",
+    description: "关系压力、抵触感或别的事情占住注意力。",
+    categoryIds: ["relationship-pressure", "resistance", "attention-elsewhere"]
+  }
+];
