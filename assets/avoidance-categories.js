@@ -18,7 +18,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我需要先整理信息，但信息太多。",
       "我需要先制定计划，可我连计划也不想做。"
     ],
-    actions: ["把任务写成一句话", "写下一个最小动作", "先做一个粗糙版本"]
+    actions: ["写下任务一句话", "写下完成标准一句话", "打开最相关的文件"]
   },
   {
     id: "task-too-large",
@@ -37,7 +37,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我把“开始”等同于“必须完成”。",
       "我把“打开任务”等同于“马上进入高强度状态”。"
     ],
-    actions: ["只打开它", "只做两分钟", "只写一个标题", "做最低可行版本"]
+    actions: ["只打开任务材料", "计时做 2 分钟", "只写一个标题"]
   },
   {
     id: "fear-of-failure",
@@ -56,7 +56,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我怕一开始就发现问题比想象中更严重。",
       "我怕已经太晚了。"
     ],
-    actions: ["先做草稿", "允许第一版粗糙", "先收集问题"]
+    actions: ["写 3 行粗草稿", "列出 1 个担心的问题", "只补一个小缺口"]
   },
   {
     id: "fear-of-judgment",
@@ -75,7 +75,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我怕别人发现我其实没准备好。",
       "我怕被比较。"
     ],
-    actions: ["先做给自己看", "做内部草稿", "准备可修改版本"]
+    actions: ["写一版不发送草稿", "只写事实部分", "标出一个可修改处"]
   },
   {
     id: "perfectionism",
@@ -94,7 +94,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我一直在找最佳方法。",
       "我一直在优化工具、环境、资料，却没有真正开始。"
     ],
-    actions: ["做低质量第一版", "先允许它难看", "做一个可修改版本"]
+    actions: ["写 3 行难看版本", "先放一个占位标题", "只改当前一处"]
   },
   {
     id: "uncomfortable-emotion",
@@ -115,7 +115,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在逃避“我怎么又这样”的自责。",
       "我在逃避心里那种沉重感。"
     ],
-    actions: ["让感觉先存在", "带着感觉做一点", "先呼吸三次"]
+    actions: ["呼吸三次后打开任务", "写下现在的感觉", "带着感觉做 2 分钟"]
   },
   {
     id: "low-energy",
@@ -134,7 +134,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我需要休息，但我一直用刷手机假装休息。",
       "我没有恢复精力，只是在逃避任务。"
     ],
-    actions: ["先喝水", "站起来活动一下", "休息十分钟后回来", "做最低可行版本"]
+    actions: ["喝一杯水", "站起来活动 30 秒", "闭眼休息 2 分钟"]
   },
   {
     id: "instant-reward",
@@ -153,7 +153,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我不想进入慢、难、没有即时回报的任务。",
       "我被“再看一下”带走了。"
     ],
-    actions: ["把手机放远", "先做两分钟再休息", "完成小动作后短休息"]
+    actions: ["把手机放到远处", "关掉当前娱乐页面", "先做 2 分钟再休息"]
   },
   {
     id: "decision-load",
@@ -172,7 +172,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在用拖延避免取舍。",
       "我在逃避“选了这个，就要放弃那个”的不舒服。"
     ],
-    actions: ["列出两个选项", "选一个可逆小决定", "做临时版本"]
+    actions: ["写下两个选项", "圈出一个可逆选择", "先选默认方案"]
   },
   {
     id: "relationship-pressure",
@@ -193,7 +193,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我怕这件事牵扯到关系压力。",
       "我不想面对某个群聊、邮件或会议。"
     ],
-    actions: ["先写一句草稿", "只回复事实", "写目前进展和下一步"]
+    actions: ["写一句回复草稿", "只发一个确认问题", "写下目前进展一句话"]
   },
   {
     id: "resistance",
@@ -213,7 +213,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在用拖延表达不满。",
       "我觉得自己被消耗了。"
     ],
-    actions: ["承认我有抵触", "区分必须做多少", "先做最低必要版本"]
+    actions: ["写下不愿意的点", "写下愿意做的一小步", "打开任务处理 2 分钟"]
   },
   {
     id: "low-meaning",
@@ -232,7 +232,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我觉得这件事很机械。",
       "我没有内在动力。"
     ],
-    actions: ["找到一个现实理由", "为未来的自己减压", "完成最低必要部分"]
+    actions: ["写下一个现实理由", "写下完成后的一个好处", "写下不做的一个代价"]
   },
   {
     id: "missing-resources",
@@ -253,7 +253,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在逃避求助。",
       "我在逃避承认自己不知道。"
     ],
-    actions: ["列出缺什么", "发一个确认信息", "问一个人", "分开已知和未知"]
+    actions: ["列出缺的 1 样东西", "发出一个确认问题", "搜索 1 个关键词"]
   },
   {
     id: "deadline-pressure",
@@ -272,7 +272,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在逃避重新安排计划。",
       "我怕现在开始会发现现实很糟。"
     ],
-    actions: ["看一眼截止时间", "做最低交付版本", "列出今天必须完成的一小块"]
+    actions: ["看一眼截止时间", "写下今天最小交付", "计时做 2 分钟"]
   },
   {
     id: "self-image-pressure",
@@ -291,7 +291,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我不想看见自己的真实进度。",
       "我宁愿不开始，也不想面对落差。"
     ],
-    actions: ["只恢复行动", "不评价自己", "做一个小动作证明能回来"]
+    actions: ["写下当前真实进度", "打开任务做 2 分钟", "记录一个已完成动作"]
   },
   {
     id: "attention-elsewhere",
@@ -310,7 +310,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我表面在拖延，实际是注意力太分散。",
       "我需要先把脑子里的杂事倒出来。"
     ],
-    actions: ["写下惦记的事", "放到旁边清单", "回到一个小任务"]
+    actions: ["写下惦记的事", "放进稍后清单", "回到当前文件 2 分钟"]
   }
 ];
 
@@ -354,5 +354,50 @@ window.AVOIDANCE_GROUPS = [
     tone: "#7d7f3d",
     description: "关系压力、抵触感或别的事情占住注意力。",
     categoryIds: ["relationship-pressure", "resistance", "attention-elsewhere"]
+  }
+];
+
+window.AVOIDANCE_QUICK_STATES = [
+  {
+    id: "dont-know-start",
+    label: "不知道怎么开始",
+    description: "先从入口、条件或选择里找一个卡点。",
+    tone: "#397f78",
+    categoryIds: ["task-unclear", "missing-resources", "decision-load"]
+  },
+  {
+    id: "feels-too-tiring",
+    label: "一想到就累",
+    description: "先把工作量、时间压力或身体能量拆小。",
+    tone: "#8f7440",
+    categoryIds: ["task-too-large", "deadline-pressure", "low-energy"]
+  },
+  {
+    id: "afraid-bad-result",
+    label: "怕做不好",
+    description: "先把失败、评价和粗糙版本分开看。",
+    tone: "#7563a0",
+    categoryIds: ["fear-of-failure", "fear-of-judgment", "perfectionism", "self-image-pressure"]
+  },
+  {
+    id: "avoid-people",
+    label: "不想面对人",
+    description: "先处理回复、评价或关系里的压力。",
+    tone: "#4f8c7d",
+    categoryIds: ["relationship-pressure", "fear-of-judgment", "resistance"]
+  },
+  {
+    id: "want-comfort-now",
+    label: "只想舒服一下",
+    description: "先承认想逃开的感觉，再接一个小动作。",
+    tone: "#3f8298",
+    categoryIds: ["instant-reward", "uncomfortable-emotion", "low-energy"]
+  },
+  {
+    id: "inner-resistance",
+    label: "心里很抵触",
+    description: "先看见不愿意、没意义或分心的部分。",
+    tone: "#7d7f3d",
+    categoryIds: ["resistance", "low-meaning", "attention-elsewhere"]
   }
 ];

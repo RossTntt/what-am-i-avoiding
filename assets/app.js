@@ -1,13 +1,16 @@
 (function () {
   const categories = window.AVOIDANCE_CATEGORIES;
   const groups = window.AVOIDANCE_GROUPS;
+  const quickStates = window.AVOIDANCE_QUICK_STATES;
   const categoryById = new Map(categories.map((category) => [category.id, category]));
   const groupById = new Map(groups.map((group) => [group.id, group]));
+  const quickStateById = new Map(quickStates.map((quickState) => [quickState.id, quickState]));
   const defaultOption = "先选一个最像的答案";
   const defaultAction = "一个小动作";
 
   const state = {
     query: "",
+    quickStateId: null,
     activeGroupId: groups[0].id,
     activeCategoryId: groups[0].categoryIds[0],
     draftOption: null,
@@ -47,7 +50,9 @@
     resultActionText: document.getElementById("resultActionText"),
     copyLine: document.getElementById("copyLine"),
     copyHint: document.getElementById("copyHint"),
-    printList: document.getElementById("printList")
+    printList: document.getElementById("printList"),
+    quickStateList: document.getElementById("quickStateList"),
+    clearQuickState: document.getElementById("clearQuickState")
   };
 
   function escapeHtml(text) {
@@ -79,6 +84,45 @@
     return group.categoryIds
       .map((id) => categoryById.get(id))
       .filter(Boolean);
+  }
+
+  function activeQuickState() {
+    return state.quickStateId ? quickStateById.get(state.quickStateId) : null;
+  }
+
+  function groupForCategory(categoryId) {
+    return groups.find((group) => group.categoryIds.includes(categoryId)) || null;
+  }
+
+  function quickCategoryIds() {
+    const quickState = activeQuickState();
+    return quickState ? new Set(quickState.categoryIds) : null;
+  }
+
+  function categoryMatchesQuickState(category, quickIds) {
+    return !quickIds || quickIds.has(category.id);
+  }
+
+  function groupCategoriesForActiveQuickState(group) {
+    const quickIds = quickCategoryIds();
+    return groupCategories(group).filter((category) => categoryMatchesQuickState(category, quickIds));
+  }
+
+  function groupMatchesQuickState(group) {
+    return groupCategoriesForActiveQuickState(group).length > 0;
+  }
+
+  function firstQuickSelection(quickState) {
+    for (const categoryId of quickState.categoryIds) {
+      const category = categoryById.get(categoryId);
+      const group = groupForCategory(categoryId);
+
+      if (category && group) {
+        return { group, category };
+      }
+    }
+
+    return { group: groups[0], category: categoryById.get(groups[0].categoryIds[0]) };
   }
 
   function groupOwnText(group) {
@@ -124,11 +168,20 @@
   }
 
   function getVisibleGroups() {
+    const quickFilteredGroups = groups.filter(groupMatchesQuickState);
+
     if (!state.query) {
-      return groups;
+      return quickFilteredGroups;
     }
 
-    return groups.filter((group) => includesQuery(groupText(group), state.query));
+    return quickFilteredGroups.filter((group) => {
+      const searchableText = state.quickStateId ? [
+        groupOwnText(group),
+        ...groupCategoriesForActiveQuickState(group).map(categoryText)
+      ].join(" ") : groupText(group);
+
+      return includesQuery(searchableText, state.query);
+    });
   }
 
   function getVisibleCategories(group) {
@@ -136,7 +189,7 @@
       return [];
     }
 
-    const groupCategoriesList = groupCategories(group);
+    const groupCategoriesList = groupCategoriesForActiveQuickState(group);
 
     if (!state.query || includesQuery(groupOwnText(group), state.query)) {
       return groupCategoriesList;
@@ -173,10 +226,41 @@
 
   function setActiveGroup(id) {
     const group = groups.find((item) => item.id === id);
-    const firstCategory = getVisibleCategories(group)[0] || groupCategories(group)[0] || null;
+
+    if (!group) {
+      return;
+    }
+
+    const firstCategory = getVisibleCategories(group)[0] || groupCategoriesForActiveQuickState(group)[0] || null;
 
     state.activeGroupId = id;
     state.activeCategoryId = firstCategory ? firstCategory.id : null;
+    clearDraft();
+    render();
+  }
+
+  function setQuickState(id) {
+    const quickState = quickStateById.get(id);
+
+    if (!quickState) {
+      return;
+    }
+
+    const selection = firstQuickSelection(quickState);
+
+    state.quickStateId = id;
+    state.activeGroupId = selection.group.id;
+    state.activeCategoryId = selection.category.id;
+    clearDraft();
+    render();
+  }
+
+  function clearQuickState() {
+    state.quickStateId = null;
+    state.query = "";
+    state.activeGroupId = groups[0].id;
+    state.activeCategoryId = groups[0].categoryIds[0];
+    elements.search.value = "";
     clearDraft();
     render();
   }
@@ -246,9 +330,26 @@
     elements.resultActionText.textContent = result.action;
   }
 
+  function renderQuickStates() {
+    elements.clearQuickState.disabled = !state.quickStateId && !state.query;
+    elements.quickStateList.innerHTML = quickStates.map((quickState) => `
+      <button
+        class="quick-state${quickState.id === state.quickStateId ? " is-active" : ""}"
+        type="button"
+        data-id="${escapeHtml(quickState.id)}"
+        style="--quick-color:${escapeHtml(quickState.tone)}"
+        aria-pressed="${quickState.id === state.quickStateId ? "true" : "false"}"
+      >
+        <span class="quick-state-title">${highlight(quickState.label)}</span>
+        <span class="quick-state-description">${highlight(quickState.description)}</span>
+      </button>
+    `).join("");
+  }
+
   function renderGroupList(visibleGroups) {
     const total = groups.length;
-    elements.groupMeta.textContent = state.query
+    const hasFilter = Boolean(state.query || state.quickStateId);
+    elements.groupMeta.textContent = hasFilter
       ? `显示 ${visibleGroups.length} / ${total} 组`
       : `共 ${total} 组`;
 
@@ -270,8 +371,12 @@
   }
 
   function renderCategoryList(visibleCategories, activeGroup) {
-    const total = activeGroup ? groupCategories(activeGroup).length : categories.length;
-    elements.categoryMeta.textContent = state.query
+    const quickState = activeQuickState();
+    const total = activeGroup
+      ? groupCategoriesForActiveQuickState(activeGroup).length
+      : quickState ? quickState.categoryIds.length : categories.length;
+    const hasFilter = Boolean(state.query || state.quickStateId);
+    elements.categoryMeta.textContent = hasFilter
       ? `显示 ${visibleCategories.length} / ${total} 类`
       : `本组 ${visibleCategories.length} 类`;
 
@@ -422,6 +527,7 @@
 
     renderSummary();
     renderConfirmedResult();
+    renderQuickStates();
     renderGroupList(visibleGroups);
     renderCategoryList(visibleCategories, activeGroup);
     renderDetail(activeGroup, visibleCategories);
@@ -436,7 +542,7 @@
     const category = categoryById.get(state.confirmedCategoryId);
 
     return {
-      title: `我现在不是在逃避全部任务，而是卡在：${category ? category.title : "未确认具体原因"}`,
+      title: `我现在可能卡在：${category ? category.title : "未确认具体原因"}`,
       groupTitle: group ? group.title : "未确认大方向",
       groupDescription: group ? group.description : "",
       categoryTitle: category ? category.title : "未确认具体原因",
@@ -456,6 +562,19 @@
       `我接下来只做：${result.action}`
     ].join("\n");
   }
+
+  elements.quickStateList.addEventListener("click", (event) => {
+    const button = event.target.closest(".quick-state");
+    if (!button) {
+      return;
+    }
+
+    setQuickState(button.dataset.id);
+  });
+
+  elements.clearQuickState.addEventListener("click", () => {
+    clearQuickState();
+  });
 
   elements.search.addEventListener("input", (event) => {
     state.query = normalize(event.target.value);
