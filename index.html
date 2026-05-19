@@ -14,41 +14,49 @@
         <h1 id="pageTitle">我现在在逃避什么？</h1>
       </div>
 
-      <section class="summary-panel" aria-label="当前填空" aria-live="polite">
-        <p class="summary-label">当下填空</p>
-        <p class="summary-line">
-          我现在可能在逃避：<span class="slot" id="selectedOption">先选一个最像的答案</span>；我接下来只做：<span class="slot" id="selectedAction">一个小动作</span>。
-        </p>
+      <section class="summary-panel" aria-label="当前状态" aria-live="polite">
+        <p class="summary-label">当下状态</p>
+        <p class="summary-line" id="summaryStatus">先选择完整选项和下一步小动作。</p>
       </section>
     </header>
 
+    <section class="confirmed-result" id="confirmedResult" aria-label="已确认填空" aria-live="polite" hidden>
+      <p class="result-label">已填入</p>
+      <p class="result-line" id="resultLine"></p>
+    </section>
+
     <section class="workspace" aria-label="拖延觉察选择器">
-      <aside class="category-pane">
+      <section class="stage-card group-stage" aria-labelledby="groupHeading">
         <label class="searchbox" for="search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="m21 21-4.2-4.2m1.2-5.3a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <input id="search" type="search" placeholder="搜索：害怕、无聊、标准、手机、求助" autocomplete="off" />
+          <input id="search" type="search" placeholder="搜索关键词" autocomplete="off" />
         </label>
 
-        <section class="nav-section" aria-labelledby="groupHeading">
-          <div class="section-heading nav-heading">
-            <p class="section-label" id="groupHeading">大方向</p>
-            <span id="groupMeta">共 0 组</span>
-          </div>
-          <nav class="group-list" id="groupList" aria-label="逃避原因大方向"></nav>
-        </section>
+        <div class="section-heading nav-heading">
+          <p class="section-label" id="groupHeading">1 大方向</p>
+          <span id="groupMeta">共 0 组</span>
+        </div>
 
-        <section class="nav-section category-section" aria-labelledby="categoryHeading">
-          <div class="section-heading nav-heading">
-            <p class="section-label" id="categoryHeading">具体原因</p>
-            <span id="categoryMeta">共 0 类</span>
-          </div>
-          <nav class="category-list" id="categoryList" aria-label="逃避原因分类"></nav>
-        </section>
-      </aside>
+        <nav class="group-list" id="groupList" aria-label="逃避原因大方向"></nav>
+      </section>
 
-      <section class="detail-pane">
+      <section class="stage-card category-stage" aria-labelledby="categoryHeading">
+        <div class="section-heading nav-heading">
+          <p class="section-label" id="categoryHeading">2 具体原因</p>
+          <span id="categoryMeta">共 0 类</span>
+        </div>
+
+        <nav class="category-list" id="categoryList" aria-label="逃避原因分类"></nav>
+      </section>
+
+      <section class="stage-card detail-pane" aria-label="句子与行动">
+        <div class="section-heading stage-heading">
+          <p class="section-label">3 句子与行动</p>
+          <span>选完整句子和小动作</span>
+        </div>
+
         <div class="empty-state" id="emptyState" hidden>
           没有找到匹配的选项。可以换一个更宽泛的词，比如“怕”“累”“不确定”。
         </div>

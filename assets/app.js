@@ -12,7 +12,8 @@
     draftOption: null,
     draftAction: null,
     selectedOption: defaultOption,
-    selectedAction: defaultAction
+    selectedAction: defaultAction,
+    hasConfirmed: false
   };
 
   const elements = {
@@ -32,8 +33,9 @@
     actionList: document.getElementById("actionList"),
     draftLine: document.getElementById("draftLine"),
     confirmLine: document.getElementById("confirmLine"),
-    selectedOption: document.getElementById("selectedOption"),
-    selectedAction: document.getElementById("selectedAction"),
+    summaryStatus: document.getElementById("summaryStatus"),
+    confirmedResult: document.getElementById("confirmedResult"),
+    resultLine: document.getElementById("resultLine"),
     copyLine: document.getElementById("copyLine"),
     copyHint: document.getElementById("copyHint"),
     printList: document.getElementById("printList")
@@ -189,8 +191,29 @@
   }
 
   function renderSummary() {
-    elements.selectedOption.textContent = state.selectedOption;
-    elements.selectedAction.textContent = state.selectedAction;
+    const hasCompleteDraft = Boolean(state.draftOption && state.draftAction);
+    const alreadyConfirmed = hasCompleteDraft
+      && state.draftOption === state.selectedOption
+      && state.draftAction === state.selectedAction;
+
+    if (state.hasConfirmed && alreadyConfirmed) {
+      elements.summaryStatus.textContent = "已填入屏幕中间，可继续调整或复制。";
+    } else if (hasCompleteDraft) {
+      elements.summaryStatus.textContent = "已选完整选项和下一步小动作，待确认填入。";
+    } else if (state.draftOption) {
+      elements.summaryStatus.textContent = "已选完整选项，还需要选择一个下一步小动作。";
+    } else if (state.draftAction) {
+      elements.summaryStatus.textContent = "已选下一步小动作，还需要选择完整选项。";
+    } else if (state.hasConfirmed) {
+      elements.summaryStatus.textContent = "已填入屏幕中间，可继续选择新的答案。";
+    } else {
+      elements.summaryStatus.textContent = "先选择完整选项和下一步小动作。";
+    }
+  }
+
+  function renderConfirmedResult() {
+    elements.confirmedResult.hidden = !state.hasConfirmed;
+    elements.resultLine.textContent = state.hasConfirmed ? currentLine() : "";
   }
 
   function renderGroupList(visibleGroups) {
@@ -290,7 +313,9 @@
       && state.draftOption === state.selectedOption
       && state.draftAction === state.selectedAction;
 
-    if (hasCompleteDraft) {
+    if (alreadyConfirmed) {
+      elements.draftLine.textContent = "已填入屏幕中间。";
+    } else if (hasCompleteDraft) {
       elements.draftLine.textContent = currentDraftLine();
     } else if (state.draftOption) {
       elements.draftLine.textContent = `我现在可能在逃避：${state.draftOption}；我接下来只做：先选择一个小动作。`;
@@ -366,6 +391,7 @@
     }
 
     renderSummary();
+    renderConfirmedResult();
     renderGroupList(visibleGroups);
     renderCategoryList(visibleCategories, activeGroup);
     renderDetail(activeGroup, visibleCategories);
@@ -428,6 +454,7 @@
 
     state.selectedOption = state.draftOption;
     state.selectedAction = state.draftAction;
+    state.hasConfirmed = true;
     elements.copyHint.textContent = "已填入";
     render();
   });
