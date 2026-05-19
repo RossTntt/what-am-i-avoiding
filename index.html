@@ -20,9 +20,32 @@
       </section>
     </header>
 
-    <section class="confirmed-result" id="confirmedResult" aria-label="已确认填空" aria-live="polite" hidden>
+    <section class="confirmed-result" id="confirmedResult" aria-label="已确认结果" aria-live="polite" hidden>
       <p class="result-label">已填入</p>
-      <p class="result-line" id="resultLine"></p>
+      <div class="result-stack">
+        <header class="result-head">
+          <p class="result-kicker">觉察结果</p>
+          <h2 id="resultTitle"></h2>
+        </header>
+        <article class="result-context">
+          <p class="result-kicker">大方向</p>
+          <h2 id="resultGroupTitle"></h2>
+          <p id="resultGroupDescription"></p>
+        </article>
+        <article class="result-context">
+          <p class="result-kicker">具体原因</p>
+          <h2 id="resultCategoryTitle"></h2>
+          <p id="resultCategoryDescription"></p>
+        </article>
+        <article class="result-answer">
+          <p class="result-kicker">我具体在逃避</p>
+          <p id="resultOptionText"></p>
+        </article>
+        <article class="result-answer result-action">
+          <p class="result-kicker">我接下来只做</p>
+          <p id="resultActionText"></p>
+        </article>
+      </div>
     </section>
 
     <section class="workspace" aria-label="拖延觉察选择器">
@@ -87,7 +110,7 @@
               <ul class="option-list" id="optionList"></ul>
             </section>
 
-            <aside class="decision-pane" aria-label="确认填空">
+            <aside class="decision-pane" aria-label="确认结果">
               <section class="detail-section" aria-label="下一步小动作">
                 <div class="section-heading">
                   <p class="section-label">下一步小动作</p>
@@ -103,7 +126,7 @@
 
                 <div class="copy-row">
                   <button class="primary-btn" id="confirmLine" type="button" disabled>确认填入</button>
-                  <button class="secondary-btn" id="copyLine" type="button">复制填空句</button>
+                  <button class="secondary-btn" id="copyLine" type="button">复制结果</button>
                   <p class="copy-hint" id="copyHint" role="status" aria-live="polite"></p>
                 </div>
               </footer>

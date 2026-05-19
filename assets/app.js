@@ -2,6 +2,7 @@
   const categories = window.AVOIDANCE_CATEGORIES;
   const groups = window.AVOIDANCE_GROUPS;
   const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const groupById = new Map(groups.map((group) => [group.id, group]));
   const defaultOption = "先选一个最像的答案";
   const defaultAction = "一个小动作";
 
@@ -13,6 +14,8 @@
     draftAction: null,
     selectedOption: defaultOption,
     selectedAction: defaultAction,
+    confirmedGroupId: null,
+    confirmedCategoryId: null,
     hasConfirmed: false
   };
 
@@ -35,7 +38,13 @@
     confirmLine: document.getElementById("confirmLine"),
     summaryStatus: document.getElementById("summaryStatus"),
     confirmedResult: document.getElementById("confirmedResult"),
-    resultLine: document.getElementById("resultLine"),
+    resultTitle: document.getElementById("resultTitle"),
+    resultGroupTitle: document.getElementById("resultGroupTitle"),
+    resultGroupDescription: document.getElementById("resultGroupDescription"),
+    resultCategoryTitle: document.getElementById("resultCategoryTitle"),
+    resultCategoryDescription: document.getElementById("resultCategoryDescription"),
+    resultOptionText: document.getElementById("resultOptionText"),
+    resultActionText: document.getElementById("resultActionText"),
     copyLine: document.getElementById("copyLine"),
     copyHint: document.getElementById("copyHint"),
     printList: document.getElementById("printList")
@@ -196,6 +205,8 @@
       && state.draftOption === state.selectedOption
       && state.draftAction === state.selectedAction;
 
+    elements.copyLine.disabled = !state.hasConfirmed;
+
     if (state.hasConfirmed && alreadyConfirmed) {
       elements.summaryStatus.textContent = "已填入屏幕中间，可继续调整或复制。";
     } else if (hasCompleteDraft) {
@@ -213,7 +224,26 @@
 
   function renderConfirmedResult() {
     elements.confirmedResult.hidden = !state.hasConfirmed;
-    elements.resultLine.textContent = state.hasConfirmed ? currentLine() : "";
+
+    if (!state.hasConfirmed) {
+      elements.resultTitle.textContent = "";
+      elements.resultGroupTitle.textContent = "";
+      elements.resultGroupDescription.textContent = "";
+      elements.resultCategoryTitle.textContent = "";
+      elements.resultCategoryDescription.textContent = "";
+      elements.resultOptionText.textContent = "";
+      elements.resultActionText.textContent = "";
+      return;
+    }
+
+    const result = confirmedResultParts();
+    elements.resultTitle.textContent = result.title;
+    elements.resultGroupTitle.textContent = result.groupTitle;
+    elements.resultGroupDescription.textContent = result.groupDescription;
+    elements.resultCategoryTitle.textContent = result.categoryTitle;
+    elements.resultCategoryDescription.textContent = result.categoryDescription;
+    elements.resultOptionText.textContent = result.option;
+    elements.resultActionText.textContent = result.action;
   }
 
   function renderGroupList(visibleGroups) {
@@ -401,8 +431,30 @@
     return `我现在可能在逃避：${state.draftOption}；我接下来只做：${state.draftAction}。`;
   }
 
+  function confirmedResultParts() {
+    const group = groupById.get(state.confirmedGroupId);
+    const category = categoryById.get(state.confirmedCategoryId);
+
+    return {
+      title: `我现在不是在逃避全部任务，而是卡在：${category ? category.title : "未确认具体原因"}`,
+      groupTitle: group ? group.title : "未确认大方向",
+      groupDescription: group ? group.description : "",
+      categoryTitle: category ? category.title : "未确认具体原因",
+      categoryDescription: category ? category.description : "",
+      option: state.selectedOption,
+      action: state.selectedAction
+    };
+  }
+
   function currentLine() {
-    return `我现在可能在逃避：${state.selectedOption}；我接下来只做：${state.selectedAction}。`;
+    const result = confirmedResultParts();
+    return [
+      result.title,
+      `大方向：${result.groupTitle}。${result.groupDescription}`,
+      `具体原因：${result.categoryTitle}。${result.categoryDescription}`,
+      `我具体在逃避：${result.option}`,
+      `我接下来只做：${result.action}`
+    ].join("\n");
   }
 
   elements.search.addEventListener("input", (event) => {
@@ -454,12 +506,19 @@
 
     state.selectedOption = state.draftOption;
     state.selectedAction = state.draftAction;
+    state.confirmedGroupId = state.activeGroupId;
+    state.confirmedCategoryId = state.activeCategoryId;
     state.hasConfirmed = true;
     elements.copyHint.textContent = "已填入";
     render();
   });
 
   elements.copyLine.addEventListener("click", async () => {
+    if (!state.hasConfirmed) {
+      elements.copyHint.textContent = "先确认填入";
+      return;
+    }
+
     const line = currentLine();
 
     try {
