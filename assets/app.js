@@ -2,6 +2,7 @@
   const categories = window.AVOIDANCE_CATEGORIES;
   const groups = window.AVOIDANCE_GROUPS;
   const quickStates = window.AVOIDANCE_QUICK_STATES;
+  const actionLibrary = window.AVOIDANCE_ACTION_LIBRARY;
   const categoryById = new Map(categories.map((category) => [category.id, category]));
   const groupById = new Map(groups.map((group) => [group.id, group]));
   const quickStateById = new Map(quickStates.map((quickState) => [quickState.id, quickState]));
@@ -15,6 +16,9 @@
     activeCategoryId: groups[0].categoryIds[0],
     draftOption: null,
     draftAction: null,
+    showMoreActions: false,
+    activeActionGroupId: actionLibrary[0].id,
+    customActionText: "",
     selectedOption: defaultOption,
     selectedAction: defaultAction,
     confirmedGroupId: null,
@@ -52,7 +56,14 @@
     copyHint: document.getElementById("copyHint"),
     printList: document.getElementById("printList"),
     quickStateList: document.getElementById("quickStateList"),
-    clearQuickState: document.getElementById("clearQuickState")
+    clearQuickState: document.getElementById("clearQuickState"),
+    toggleMoreActions: document.getElementById("toggleMoreActions"),
+    closeMoreActions: document.getElementById("closeMoreActions"),
+    moreActions: document.getElementById("moreActions"),
+    actionGroupList: document.getElementById("actionGroupList"),
+    actionLibrary: document.getElementById("actionLibrary"),
+    customAction: document.getElementById("customAction"),
+    useCustomAction: document.getElementById("useCustomAction")
   };
 
   function escapeHtml(text) {
@@ -164,6 +175,9 @@
   function clearDraft() {
     state.draftOption = null;
     state.draftAction = null;
+    state.showMoreActions = false;
+    state.activeActionGroupId = actionLibrary[0].id;
+    state.customActionText = "";
     elements.copyHint.textContent = "";
   }
 
@@ -281,6 +295,44 @@
     state.draftAction = action;
     elements.copyHint.textContent = "";
     render();
+  }
+
+  function toggleMoreActions() {
+    state.showMoreActions = !state.showMoreActions;
+    elements.copyHint.textContent = "";
+    render();
+  }
+
+  function closeMoreActions() {
+    state.showMoreActions = false;
+    elements.copyHint.textContent = "";
+    render();
+  }
+
+  function setActiveActionGroup(id) {
+    if (!actionLibrary.some((group) => group.id === id)) {
+      return;
+    }
+
+    state.activeActionGroupId = id;
+    elements.copyHint.textContent = "";
+    render();
+  }
+
+  function setCustomActionText(text) {
+    state.customActionText = text;
+    elements.useCustomAction.disabled = !state.customActionText.trim();
+    elements.copyHint.textContent = "";
+  }
+
+  function useCustomAction() {
+    const action = state.customActionText.trim();
+
+    if (!action) {
+      return;
+    }
+
+    setDraftAction(action);
   }
 
   function renderSummary() {
@@ -440,6 +492,48 @@
         ${highlight(action)}
       </button>
     `).join("");
+    renderMoreActions();
+  }
+
+  function renderMoreActions() {
+    const activeGroup = actionLibrary.find((group) => group.id === state.activeActionGroupId) || actionLibrary[0];
+
+    elements.moreActions.hidden = !state.showMoreActions;
+    elements.toggleMoreActions.textContent = state.showMoreActions ? "收起小动作" : "更多小动作";
+    elements.toggleMoreActions.setAttribute("aria-expanded", state.showMoreActions ? "true" : "false");
+    elements.useCustomAction.disabled = !state.customActionText.trim();
+    elements.customAction.value = state.customActionText;
+
+    elements.actionGroupList.innerHTML = actionLibrary.map((group) => `
+      <button
+        class="action-group-tab${group.id === activeGroup.id ? " is-active" : ""}"
+        type="button"
+        data-id="${escapeHtml(group.id)}"
+        aria-pressed="${group.id === activeGroup.id ? "true" : "false"}"
+      >
+        ${escapeHtml(group.title)}
+      </button>
+    `).join("");
+
+    elements.actionLibrary.innerHTML = `
+      <section class="action-library-group">
+        <header class="action-library-head">
+          <p>${escapeHtml(activeGroup.title)}</p>
+          <span>${escapeHtml(activeGroup.description)}</span>
+        </header>
+        <div class="action-list action-library-list">
+          ${activeGroup.actions.map((action) => `
+            <button
+              class="action-choice${action === state.draftAction ? " is-selected" : ""}"
+              type="button"
+              data-action="${escapeHtml(action)}"
+            >
+              ${escapeHtml(action)}
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `;
   }
 
   function renderDraft() {
@@ -616,6 +710,46 @@
     }
 
     setDraftAction(button.dataset.action);
+  });
+
+  elements.toggleMoreActions.addEventListener("click", () => {
+    toggleMoreActions();
+  });
+
+  elements.closeMoreActions.addEventListener("click", () => {
+    closeMoreActions();
+  });
+
+  elements.actionGroupList.addEventListener("click", (event) => {
+    const button = event.target.closest(".action-group-tab");
+    if (!button) {
+      return;
+    }
+
+    setActiveActionGroup(button.dataset.id);
+  });
+
+  elements.actionLibrary.addEventListener("click", (event) => {
+    const button = event.target.closest(".action-choice");
+    if (!button) {
+      return;
+    }
+
+    setDraftAction(button.dataset.action);
+  });
+
+  elements.customAction.addEventListener("input", (event) => {
+    setCustomActionText(event.target.value);
+  });
+
+  elements.useCustomAction.addEventListener("click", () => {
+    useCustomAction();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && state.showMoreActions) {
+      closeMoreActions();
+    }
   });
 
   elements.confirmLine.addEventListener("click", () => {

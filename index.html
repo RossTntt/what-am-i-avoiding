@@ -122,9 +122,33 @@
             <aside class="decision-pane" aria-label="确认结果">
               <section class="detail-section" aria-label="下一步小动作">
                 <div class="section-heading">
-                  <p class="section-label">下一步小动作</p>
+                  <p class="section-label">推荐小动作</p>
+                  <button class="action-toggle" id="toggleMoreActions" type="button" aria-expanded="false" aria-controls="moreActions">更多小动作</button>
                 </div>
                 <div class="action-list" id="actionList"></div>
+                <div class="more-actions" id="moreActions" role="dialog" aria-label="更多小动作" hidden>
+                  <header class="more-actions-head">
+                    <div>
+                      <p class="section-label">更多小动作</p>
+                      <p class="more-actions-subtitle">按工作类型选一个 2 分钟内能做的动作。</p>
+                    </div>
+                    <button class="more-actions-close" id="closeMoreActions" type="button" aria-label="关闭更多小动作">关闭</button>
+                  </header>
+
+                  <div class="more-actions-body">
+                    <nav class="action-group-list" id="actionGroupList" aria-label="小动作类型"></nav>
+                    <div class="action-library" id="actionLibrary"></div>
+                  </div>
+
+                  <section class="custom-action" aria-label="自己写一个小动作">
+                    <label class="custom-action-label" for="customAction">自己写一个小动作</label>
+                    <p class="custom-action-guide">2 分钟内；只做一个动作；能不用准备直接开始；优先用“打开、写下、发出、关掉、标出、喝水、站起”开头；不要写“完成、优化、研究、解决”。</p>
+                    <div class="custom-action-row">
+                      <input id="customAction" type="text" placeholder="例如：写下当前报错一句话" autocomplete="off" />
+                      <button class="secondary-btn custom-action-btn" id="useCustomAction" type="button" disabled>使用这个动作</button>
+                    </div>
+                  </section>
+                </div>
               </section>
 
               <footer class="result-panel">

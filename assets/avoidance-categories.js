@@ -5,7 +5,7 @@ window.AVOIDANCE_CATEGORIES = [
     icon: "☁️",
     tone: "#4f8f88",
     description: "脑子里只有一团任务，缺少清晰入口。",
-    typical: ["不知道第一步是什么", "不知道做到什么程度", "信息太多，理不清"],
+    typical: ["不知道第一步是什么", "不知道做到什么程度", "信息太多，理不清", "不知道目标表粒度"],
     options: [
       "我不知道第一步是什么。",
       "我不知道做到什么程度才算完成。",
@@ -16,9 +16,10 @@ window.AVOIDANCE_CATEGORIES = [
       "我脑子里只有一团混乱的任务，没有清楚的小步骤。",
       "我需要先查资料，但不知道查什么。",
       "我需要先整理信息，但信息太多。",
-      "我需要先制定计划，可我连计划也不想做。"
+      "我需要先制定计划，可我连计划也不想做。",
+      "我有一个拼 SQL 表的任务，但还没想清楚步骤，所以不愿意开始。"
     ],
-    actions: ["写下任务一句话", "写下完成标准一句话", "打开最相关的文件"]
+    actions: ["写下任务一句话", "写下交付标准一句话", "打开最相关的文件", "写下目标表粒度和 3 个字段"]
   },
   {
     id: "task-too-large",
@@ -213,7 +214,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我在用拖延表达不满。",
       "我觉得自己被消耗了。"
     ],
-    actions: ["写下不愿意的点", "写下愿意做的一小步", "打开任务处理 2 分钟"]
+    actions: ["写下不愿意的点", "写下愿意做的一小步", "打开任务做 2 分钟"]
   },
   {
     id: "low-meaning",
@@ -232,7 +233,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我觉得这件事很机械。",
       "我没有内在动力。"
     ],
-    actions: ["写下一个现实理由", "写下完成后的一个好处", "写下不做的一个代价"]
+    actions: ["写下一个现实理由", "写下交出去的一个好处", "写下不做的一个代价"]
   },
   {
     id: "missing-resources",
@@ -291,7 +292,7 @@ window.AVOIDANCE_CATEGORIES = [
       "我不想看见自己的真实进度。",
       "我宁愿不开始，也不想面对落差。"
     ],
-    actions: ["写下当前真实进度", "打开任务做 2 分钟", "记录一个已完成动作"]
+    actions: ["写下当前真实进度", "打开任务做 2 分钟", "记录一个已做动作"]
   },
   {
     id: "attention-elsewhere",
@@ -399,5 +400,50 @@ window.AVOIDANCE_QUICK_STATES = [
     description: "先看见不愿意、没意义或分心的部分。",
     tone: "#7d7f3d",
     categoryIds: ["resistance", "low-meaning", "attention-elsewhere"]
+  }
+];
+
+window.AVOIDANCE_ACTION_LIBRARY = [
+  {
+    id: "writing-docs",
+    title: "写文档/说明",
+    description: "适合 README、方案、汇报、注释和交付说明。",
+    actions: ["写 3 行问题背景", "写下输入输出", "写一个小节标题", "写下当前结论一句话", "标出一个待补位置"]
+  },
+  {
+    id: "writing-code",
+    title: "写代码",
+    description: "适合函数、脚本、接口、测试和重构入口。",
+    actions: ["打开目标文件", "写一个函数签名", "写 3 行伪代码", "补一条 TODO", "标出一个变量 shape", "写一个 SQL v0 骨架"]
+  },
+  {
+    id: "algorithm-thinking",
+    title: "想算法思路",
+    description: "适合建模、指标、实验方案和不确定的技术路线。",
+    actions: ["写下已知和未知各 1 条", "列一个 baseline", "写出评价指标一句话", "画出 3 步流程", "写下一个最小实验假设", "写下目标表粒度和主键"]
+  },
+  {
+    id: "research-debugging",
+    title: "查资料/排查",
+    description: "适合文档查询、报错定位、实验异常和依赖信息。",
+    actions: ["搜索 1 个关键词", "打开一页相关文档", "记录一个异常现象", "写下一个待验证假设", "列出缺的 1 条信息"]
+  },
+  {
+    id: "communication-waiting",
+    title: "沟通/等待",
+    description: "适合需要别人回复、确认、评审或同步状态的任务。",
+    actions: ["发一个确认问题", "写下当前阻塞一句话", "列出等待时能做的一件事", "检查一次依赖状态", "写下一位相关人"]
+  },
+  {
+    id: "organizing-closing",
+    title: "整理/收束",
+    description: "适合信息太散、页面太多、任务边界不清的时候。",
+    actions: ["写下 3 个未做点", "把杂念放进稍后清单", "关闭一个无关页面", "写下下一步 owner", "整理一个文件名或标题"]
+  },
+  {
+    id: "low-energy-start",
+    title: "低能量启动",
+    description: "适合累、烦、脑子转不动，但还想轻轻接回任务。",
+    actions: ["喝一杯水", "站起来活动 30 秒", "呼吸三次后打开任务", "计时做 2 分钟", "只看一眼当前材料"]
   }
 ];
